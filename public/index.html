@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Victoria Courts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --yellow:       #EDDF3A;
+    --yellow-dark:  #D4C828;
+    --yellow-muted: #F5EF7A;
+    --navy:         #1B2DB8;
+    --navy-dark:    #121F8A;
+    --navy-muted:   #4A5CC8;
+    --navy-faint:   rgba(27, 45, 184, 0.12);
+
+    --beige:        #F2EDD0;
+    --beige-dark:   #E8E0BC;
+    --beige-light:  #FAF8EC;
+    --surface:      #FAF8EC;
+
+    --bg:           var(--beige);
+    --text:         var(--navy);
+    --text-muted:   var(--navy-muted);
+    --border:       rgba(27, 45, 184, 0.22);
+
+    --radius-badge:   9999px;
+    --radius-button:  10px;
+    --radius-default: 14px;
+    --radius-card:    20px;
+
+    --font-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+    --font-script:  'Caveat', cursive;
+    --font-body:    ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--beige);
+    color: var(--navy);
+    min-height: 100dvh;
+  }
+
+  /* ─── Header ─────────────────────────────────────────────── */
+  header {
+    background: var(--navy);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-deco {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    opacity: 0.18;
+  }
+
+  .wordmark {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  .wordmark-text {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--yellow);
+  }
+
+  .wordmark-sub {
+    font-family: var(--font-script);
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
+    font-weight: 400;
+    color: rgba(237, 223, 58, 0.6);
+    letter-spacing: 0.01em;
+    line-height: 1;
+  }
+
+  /* ─── Filter Panel ────────────────────────────────────────── */
+  .filter-panel {
+    background: var(--navy);
+    padding: 32px 32px 40px;
+    display: flex;
+    justify-content: center;
+    border-bottom: 3px solid var(--navy-dark);
+  }
+
+  .filter-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    width: 100%;
+    max-width: 840px;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .filter-label {
+    font-family: var(--font-display);
+    font-size: 1.0rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(237, 223, 58, 0.65);
+    text-align: center;
+    cursor: default;
+  }
+
+  .date-input {
+    border: 1.5px solid rgba(237, 223, 58, 0.4);
+    border-radius: var(--radius-default);
+    padding: 10px 18px;
+    font-size: 1.5rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    background: var(--beige);
+    color: var(--navy);
+    cursor: pointer;
+    transition: border-color 0.15s;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .date-input:focus-visible {
+    outline: 2px solid var(--yellow);
+    outline-offset: 2px;
+    border-color: var(--yellow);
+  }
+
+  .field-error {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--navy);
+    background: var(--yellow-muted);
+    border: 1.5px solid var(--navy);
+    border-radius: var(--radius-default);
+    padding: 7px 14px;
+    margin-top: 4px;
+    text-align: center;
+    display: none;
+  }
+  .field-error.visible { display: block; }
+
+  .pill-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pill-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .pill-label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .pill {
+    padding: 7px 16px;
+    border-radius: var(--radius-badge);
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: var(--font-display);
+    border: 1.5px solid rgba(237, 223, 58, 0.4);
+    background: transparent;
+    color: rgba(237, 223, 58, 0.7);
+    cursor: pointer;
+    transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+    user-select: none;
+    letter-spacing: 0.02em;
+  }
+
+  .pill-label input[type="checkbox"]:focus-visible + .pill {
+    outline: 2px solid var(--yellow);
+    outline-offset: 2px;
+  }
+
+  .pill-label input:checked + .pill {
+    background: var(--beige);
+    border-color: var(--beige);
+    color: var(--navy);
+  }
+
+  .pill-label:hover .pill {
+    border-color: var(--yellow);
+    color: var(--yellow);
+  }
+
+  .pill-label input:checked + .pill:hover {
+    background: var(--beige-dark);
+    border-color: var(--beige-dark);
+    color: var(--navy);
+  }
+
+  .search-btn {
+    background: var(--beige);
+    color: var(--navy);
+    border: none;
+    border-radius: var(--radius-button);
+    padding: 13px 32px;
+    margin-top: 8px;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .search-btn:focus-visible {
+    outline: 2px solid var(--beige-dark);
+    outline-offset: 2px;
+  }
+
+  .search-btn:hover { background: var(--beige-dark); }
+  .search-btn:active { transform: scale(0.98); }
+  .search-btn:disabled {
+    background: var(--navy-muted);
+    color: rgba(255,255,255,0.4);
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ─── Main results ────────────────────────────────────────── */
+  .main {
+    padding: 48px 32px;
+    max-width: 960px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .status-msg {
+    color: var(--navy-muted);
+    font-size: 1.4rem;
+    font-family: var(--font-script);
+    font-style: italic;
+  }
+
+  .loading-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--navy-muted);
+    font-size: 1.4rem;
+    font-family: var(--font-display);
+  }
+
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--navy-faint);
+    border-top-color: var(--navy);
+    border-radius: 50%;
+    animation: spin 0.65s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .date-section { margin-bottom: 56px; }
+
+  .date-heading {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+    margin-bottom: 32px;
+    text-align: left;
+    text-wrap: balance;
+  }
+
+  /* Post-it style park cards */
+  .park-section {
+    margin-bottom: 28px;
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    padding: 28px 28px 24px;
+    border: 1.5px solid var(--navy);
+    position: relative;
+    text-align: left;
+  }
+
+  .park-pin {
+    position: absolute;
+    top: -10px;
+    left: 22px;
+    color: var(--navy);
+    opacity: 0.7;
+  }
+
+  .park-name {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--navy-muted);
+    padding-bottom: 14px;
+    margin-bottom: 4px;
+    border-bottom: 1.5px solid var(--navy-faint);
+    padding-left: 4px;
+  }
+
+  .court-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--navy-faint);
+  }
+
+  .court-row:last-child { border-bottom: none; }
+
+  .court-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 180px;
+    flex-shrink: 0;
+  }
+
+  .court-name {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--navy);
+    line-height: 1.0;
+  }
+
+  .court-badge { display: none; }
+
+  .slots {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .slots-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .slot-chip {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: var(--radius-badge);
+    background: transparent;
+    color: var(--navy);
+    border: 1.5px solid var(--navy);
+    letter-spacing: 0.01em;
+  }
+
+  .slot-none {
+    font-size: 1.1rem;
+    color: var(--navy-muted);
+    font-family: var(--font-script);
+    font-style: italic;
+  }
+
+  .drop-in-note {
+    font-family: var(--font-script);
+    font-size: 1rem;
+    color: var(--navy-muted);
+    margin-top: 2px;
+    font-style: italic;
+  }
+
+  .book-link {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--beige);
+    text-decoration: none;
+    padding: 8px 18px;
+    background: var(--navy);
+    border: 1.5px solid var(--navy);
+    border-radius: var(--radius-default);
+    white-space: nowrap;
+    transition: background-color 0.12s ease, border-color 0.12s ease;
+    flex-shrink: 0;
+  }
+
+  .book-link:hover {
+    background: var(--navy-dark);
+    border-color: var(--navy-dark);
+  }
+
+  .book-link:focus-visible {
+    outline: 2px solid var(--navy);
+    outline-offset: 2px;
+  }
+
+  .error {
+    background: var(--beige-light);
+    border: 1.5px solid var(--navy);
+    border-radius: var(--radius-card);
+    padding: 20px 24px;
+    color: var(--navy);
+    font-size: 1.3rem;
+    font-family: var(--font-body);
+    text-align: left;
+  }
+
+  .empty {
+    color: var(--navy-muted);
+    font-size: 1.4rem;
+    font-family: var(--font-script);
+    font-style: italic;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 16px 20px; }
+    .filter-panel { padding: 24px 16px 32px; }
+    .filter-label { font-size: 0.85rem; }
+    .pill { font-size: 0.85rem; }
+    .date-input { font-size: 1.1rem; }
+    .search-btn { font-size: 1.2rem; width: 100%; }
+    .main { padding: 24px 16px; }
+    .date-heading { font-size: 1.8rem; }
+    .park-section { padding: 20px 16px 16px; }
+    .court-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .court-info { min-width: unset; }
+    .court-name { font-size: 1.4rem; }
+    .slots { align-items: flex-start; }
+    .slot-chip { font-size: 0.82rem; }
+    .book-link { font-size: 0.9rem; align-self: flex-start; }
+    .header-deco { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="wordmark" href="#" aria-label="Victoria Courts home">
+    <div>
+      <div class="wordmark-text">Victoria Courts</div>
+      <div class="wordmark-sub">— find your court —</div>
+    </div>
+  </a>
+  <div class="header-deco" aria-hidden="true">
+    <!-- Tennis racquet -->
+    <svg width="38" height="58" viewBox="0 0 38 58" fill="none" xmlns="http://www.w3.org/2000/svg" color="var(--yellow)">
+      <ellipse cx="19" cy="20" rx="14" ry="17" stroke="currentColor" stroke-width="2.2" fill="none"/>
+      <line x1="5.5" y1="12" x2="32.5" y2="12" stroke="currentColor" stroke-width="1"/>
+      <line x1="5" y1="18" x2="33" y2="18" stroke="currentColor" stroke-width="1"/>
+      <line x1="5" y1="24" x2="33" y2="24" stroke="currentColor" stroke-width="1"/>
+      <line x1="5.5" y1="30" x2="32.5" y2="30" stroke="currentColor" stroke-width="1"/>
+      <line x1="11" y1="3" x2="11" y2="37" stroke="currentColor" stroke-width="1"/>
+      <line x1="17" y1="3" x2="17" y2="37" stroke="currentColor" stroke-width="1"/>
+      <line x1="23" y1="3" x2="23" y2="37" stroke="currentColor" stroke-width="1"/>
+      <line x1="29" y1="4" x2="29" y2="37" stroke="currentColor" stroke-width="1"/>
+      <path d="M16 37 L15 56 Q19 58 23 56 L22 37 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <!-- Tennis net -->
+    <svg width="68" height="36" viewBox="0 0 68 36" fill="none" xmlns="http://www.w3.org/2000/svg" color="var(--yellow)">
+      <line x1="2" y1="4" x2="2" y2="34" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="66" y1="4" x2="66" y2="34" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M2 6 Q34 2 66 6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+      <line x1="2" y1="34" x2="66" y2="34" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="17" y1="6" x2="17" y2="34" stroke="currentColor" stroke-width="1"/>
+      <line x1="34" y1="4" x2="34" y2="34" stroke="currentColor" stroke-width="1"/>
+      <line x1="51" y1="6" x2="51" y2="34" stroke="currentColor" stroke-width="1"/>
+      <line x1="2" y1="14" x2="66" y2="14" stroke="currentColor" stroke-width="1"/>
+      <line x1="2" y1="24" x2="66" y2="24" stroke="currentColor" stroke-width="1"/>
+    </svg>
+    <!-- Pickleball paddle -->
+    <svg width="38" height="60" viewBox="0 0 38 60" fill="none" xmlns="http://www.w3.org/2000/svg" color="var(--yellow)">
+      <path d="M5 38 L5 14 Q5 2 19 2 Q33 2 33 14 L33 38 Z" stroke="currentColor" stroke-width="2.2" fill="none"/>
+      <circle cx="13" cy="11" r="2.2" fill="currentColor"/>
+      <circle cx="20" cy="11" r="2.2" fill="currentColor"/>
+      <circle cx="27" cy="11" r="2.2" fill="currentColor"/>
+      <circle cx="13" cy="19" r="2.2" fill="currentColor"/>
+      <circle cx="20" cy="19" r="2.2" fill="currentColor"/>
+      <circle cx="27" cy="19" r="2.2" fill="currentColor"/>
+      <circle cx="13" cy="27" r="2.2" fill="currentColor"/>
+      <circle cx="20" cy="27" r="2.2" fill="currentColor"/>
+      <circle cx="27" cy="27" r="2.2" fill="currentColor"/>
+      <path d="M13 38 L11 58 Q19 60 27 58 L25 38 Z" stroke="currentColor" stroke-width="2" fill="none"/>
+    </svg>
+  </div>
+</header>
+
+<div class="filter-panel">
+  <div class="filter-grid">
+
+    <div class="filter-group">
+      <label for="dateInput" class="filter-label">Date</label>
+      <input type="date" id="dateInput" class="date-input" autocomplete="off">
+      <span class="field-error" id="errorDate" role="alert">Please select a date.</span>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label" id="courtTypeLabel">Court Type</span>
+      <div class="pill-group" role="group" aria-labelledby="courtTypeLabel">
+        <label class="pill-label">
+          <input type="checkbox" id="typeTennis" checked>
+          <span class="pill">Tennis</span>
+        </label>
+        <label class="pill-label">
+          <input type="checkbox" id="typePickleball" checked>
+          <span class="pill">Pickleball</span>
+        </label>
+      </div>
+      <span class="field-error" id="errorType" role="alert">Select at least one court type.</span>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label" id="locationsLabel">Locations</span>
+      <div class="pill-group" role="group" aria-labelledby="locationsLabel">
+        <label class="pill-label"><input type="checkbox" class="loc" value="banfield_park" checked><span class="pill">Banfield</span></label>
+        <label class="pill-label"><input type="checkbox" class="loc" value="barnard_park" checked><span class="pill">Barnard</span></label>
+        <label class="pill-label"><input type="checkbox" class="loc" value="beacon_hill_park" checked><span class="pill">Beacon Hill</span></label>
+        <label class="pill-label"><input type="checkbox" class="loc" value="central_park" checked><span class="pill">Central</span></label>
+        <label class="pill-label"><input type="checkbox" class="loc" value="franklin_green" checked><span class="pill">Franklin Green</span></label>
+        <label class="pill-label"><input type="checkbox" class="loc" value="hollywood_park" checked><span class="pill">Hollywood</span></label>
+        <label class="pill-label"><input type="checkbox" class="loc" value="oaklands_park" checked><span class="pill">Oaklands</span></label>
+        <label class="pill-label"><input type="checkbox" class="loc" value="stadacona_park" checked><span class="pill">Stadacona</span></label>
+        <label class="pill-label"><input type="checkbox" class="loc" value="todd_park" checked><span class="pill">Todd</span></label>
+        <label class="pill-label"><input type="checkbox" class="loc" value="topaz_park" checked><span class="pill">Topaz</span></label>
+      </div>
+      <span class="field-error" id="errorLocation" role="alert">Select at least one location.</span>
+    </div>
+
+    <button class="search-btn" id="searchBtn" onclick="search()">Check Availability</button>
+  </div>
+</div>
+
+<div class="main" id="results">
+  <p class="status-msg">Select a date and click Check Availability.</p>
+</div>
+
+<script>
+const WIDGET_ID = '2d849259-dcf3-41d0-a5d4-fea2489cc704';
+
+const today = new Date();
+document.getElementById('dateInput').value = today.toISOString().split('T')[0];
+
+function syncToURL() {
+  const date = document.getElementById('dateInput').value;
+  const types = [];
+  if (document.getElementById('typeTennis').checked) types.push('tennis');
+  if (document.getElementById('typePickleball').checked) types.push('pickleball');
+  const locations = Array.from(document.querySelectorAll('.loc:checked')).map(c => c.value);
+  const params = new URLSearchParams();
+  if (date) params.set('date', date);
+  types.forEach(t => params.append('types', t));
+  locations.forEach(l => params.append('loc', l));
+  history.replaceState(null, '', '?' + params.toString());
+}
+
+(function restoreFromURL() {
+  const params = new URLSearchParams(location.search);
+  if (params.has('date')) document.getElementById('dateInput').value = params.get('date');
+  const types = params.getAll('types');
+  if (types.length) {
+    document.getElementById('typeTennis').checked = types.includes('tennis');
+    document.getElementById('typePickleball').checked = types.includes('pickleball');
+  }
+  const locs = params.getAll('loc');
+  if (locs.length) {
+    document.querySelectorAll('.loc').forEach(cb => {
+      cb.checked = locs.includes(cb.value);
+    });
+  }
+})();
+
+function showError(id) { document.getElementById(id).classList.add('visible'); }
+function clearError(id) { document.getElementById(id).classList.remove('visible'); }
+function clearAllErrors() { ['errorDate','errorType','errorLocation'].forEach(clearError); }
+
+async function search() {
+  clearAllErrors();
+  syncToURL();
+
+  const date = document.getElementById('dateInput').value;
+  const types = [];
+  if (document.getElementById('typeTennis').checked) types.push('tennis');
+  if (document.getElementById('typePickleball').checked) types.push('pickleball');
+  const locations = Array.from(document.querySelectorAll('.loc:checked')).map(c => c.value);
+
+  let firstError = null;
+  if (!date) { showError('errorDate'); firstError = firstError || 'dateInput'; }
+  if (!types.length) { showError('errorType'); firstError = firstError || 'typeTennis'; }
+  if (!locations.length) { showError('errorLocation'); firstError = firstError || document.querySelector('.loc'); }
+  if (firstError) {
+    const el = typeof firstError === 'string' ? document.getElementById(firstError) : firstError;
+    el?.focus();
+    return;
+  }
+
+  const btn = document.getElementById('searchBtn');
+  btn.disabled = true;
+  document.getElementById('results').innerHTML = '<div class="loading-wrap"><div class="spinner" aria-hidden="true"></div>Checking availability…</div>';
+
+  try {
+    const params = new URLSearchParams();
+    locations.forEach(l => params.append('locations[]', l));
+    types.forEach(t => params.append('types[]', t));
+    params.set('availability_date', date);
+
+    const resp = await fetch(`/api/courts?${params}`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+
+    render(json.data, date);
+  } catch (e) {
+    document.getElementById('results').innerHTML = `<div class="error" role="alert">Failed to load: ${e.message}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// Rotate through decorative park pin icons
+const PIN_ICONS = [
+  // Tennis racquet
+  `<svg width="22" height="34" viewBox="0 0 38 58" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="19" cy="20" rx="14" ry="17" stroke="currentColor" stroke-width="2.2" fill="none"/><line x1="5.5" y1="12" x2="32.5" y2="12" stroke="currentColor" stroke-width="1"/><line x1="5" y1="18" x2="33" y2="18" stroke="currentColor" stroke-width="1"/><line x1="5" y1="24" x2="33" y2="24" stroke="currentColor" stroke-width="1"/><line x1="5.5" y1="30" x2="32.5" y2="30" stroke="currentColor" stroke-width="1"/><line x1="11" y1="3" x2="11" y2="37" stroke="currentColor" stroke-width="1"/><line x1="17" y1="3" x2="17" y2="37" stroke="currentColor" stroke-width="1"/><line x1="23" y1="3" x2="23" y2="37" stroke="currentColor" stroke-width="1"/><line x1="29" y1="4" x2="29" y2="37" stroke="currentColor" stroke-width="1"/><path d="M16 37 L15 56 Q19 58 23 56 L22 37 Z" fill="none" stroke="currentColor" stroke-width="2"/></svg>`,
+  // Pickleball paddle
+  `<svg width="22" height="34" viewBox="0 0 38 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 38 L5 14 Q5 2 19 2 Q33 2 33 14 L33 38 Z" stroke="currentColor" stroke-width="2.2" fill="none"/><circle cx="13" cy="11" r="2.2" fill="currentColor"/><circle cx="20" cy="11" r="2.2" fill="currentColor"/><circle cx="27" cy="11" r="2.2" fill="currentColor"/><circle cx="13" cy="19" r="2.2" fill="currentColor"/><circle cx="20" cy="19" r="2.2" fill="currentColor"/><circle cx="27" cy="19" r="2.2" fill="currentColor"/><circle cx="13" cy="27" r="2.2" fill="currentColor"/><circle cx="20" cy="27" r="2.2" fill="currentColor"/><circle cx="27" cy="27" r="2.2" fill="currentColor"/><path d="M13 38 L11 58 Q19 60 27 58 L25 38 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>`,
+  // Tennis net
+  `<svg width="40" height="22" viewBox="0 0 68 36" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="2" y1="4" x2="2" y2="34" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="66" y1="4" x2="66" y2="34" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M2 6 Q34 2 66 6" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="2" y1="34" x2="66" y2="34" stroke="currentColor" stroke-width="1.5"/><line x1="17" y1="6" x2="17" y2="34" stroke="currentColor" stroke-width="1"/><line x1="34" y1="4" x2="34" y2="34" stroke="currentColor" stroke-width="1"/><line x1="51" y1="6" x2="51" y2="34" stroke="currentColor" stroke-width="1"/><line x1="2" y1="14" x2="66" y2="14" stroke="currentColor" stroke-width="1"/><line x1="2" y1="24" x2="66" y2="24" stroke="currentColor" stroke-width="1"/></svg>`,
+];
+
+function render(courts, targetDate) {
+  if (!courts || !Object.keys(courts).length) {
+    document.getElementById('results').innerHTML = '<p class="empty">No courts found for the selected filters.</p>';
+    return;
+  }
+
+  const byPark = {};
+  for (const court of Object.values(courts)) {
+    const park = court.ParkName || court.ParkId;
+    if (!byPark[park]) byPark[park] = [];
+    byPark[park].push(court);
+  }
+
+  const dateObj = new Date(targetDate + 'T00:00:00');
+  const dateLabel = new Intl.DateTimeFormat(navigator.language, {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  }).format(dateObj);
+
+  let html = `<div class="date-section"><h2 class="date-heading">${dateLabel}</h2>`;
+
+  let anyData = false;
+  let pinIdx = 0;
+  for (const [park, parkCourts] of Object.entries(byPark).sort()) {
+    const rows = parkCourts.map(court => {
+      const dateInfo = court.Dates?.[targetDate];
+      const isDropIn = court.ButtonLabel === 'View Schedule';
+
+      let slotsHtml = '';
+      if (dateInfo?.Availabilities?.length) {
+        const chips = dateInfo.Availabilities.map(a =>
+          `<span class="slot-chip">${formatSlot(a.Schedule)}</span>`
+        ).join('');
+        slotsHtml = `<div class="slots-chips">${chips}</div>`;
+      } else {
+        slotsHtml = `<span class="slot-none">No availability</span>`;
+      }
+
+      const bookUrl = `https://cityofvictoria.perfectmind.com/23404/Clients/BookMe4LandingPages/Facility?facilityId=${court.ID}&widgetId=${WIDGET_ID}&arrivalDate=${targetDate}`;
+      const courtNum = court.FacilityNumber ? ` #${court.FacilityNumber}` : '';
+      const shortName = `${court.FacilityType}${courtNum}`;
+
+      const bookBtn = (!isDropIn && dateInfo?.Availabilities?.length)
+        ? `<a class="book-link" href="${bookUrl}" target="_blank" rel="noopener noreferrer">Book →</a>`
+        : '';
+
+      return `
+        <div class="court-row">
+          <div class="court-info">
+            <span class="court-name">${shortName}</span>
+          </div>
+          <div class="slots">${slotsHtml}${isDropIn ? '<span class="drop-in-note">Drop-in only</span>' : ''}</div>
+          ${bookBtn}
+        </div>`;
+    }).join('');
+
+    if (rows.trim()) {
+      anyData = true;
+      const pin = PIN_ICONS[pinIdx % PIN_ICONS.length];
+      pinIdx++;
+      html += `<div class="park-section"><span class="park-pin" aria-hidden="true">${pin}</span><div class="park-name">${park}</div>${rows}</div>`;
+    }
+  }
+
+  if (!anyData) html += '<p class="empty">No availability data for this date.</p>';
+
+  html += '</div>';
+  document.getElementById('results').innerHTML = html;
+}
+
+function formatSlot(schedule) {
+  const match = schedule.match(/\d{4}\s+(.+)$/);
+  return match ? match[1].replace(/\s-\s/g, ' – ') : schedule;
+}
+</script>
+</body>
+</html>
