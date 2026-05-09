@@ -52,7 +52,7 @@
     padding: 20px 32px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     position: relative;
     overflow: hidden;
   }
@@ -66,11 +66,13 @@
 
   .wordmark {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 14px;
+    gap: 4px;
     text-decoration: none;
     position: relative;
     z-index: 1;
+    text-align: center;
   }
 
   .wordmark-text {
@@ -86,7 +88,7 @@
     font-family: var(--font-script);
     font-size: clamp(1rem, 1.8vw, 1.4rem);
     font-weight: 400;
-    color: rgba(237, 223, 58, 0.6);
+    color: var(--beige);
     letter-spacing: 0.01em;
     line-height: 1;
   }
@@ -119,11 +121,11 @@
 
   .filter-label {
     font-family: var(--font-display);
-    font-size: 1.0rem;
+    font-size: 1.5rem;
     font-weight: 600;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(237, 223, 58, 0.65);
+    color: var(--yellow);
     text-align: center;
     cursor: default;
   }
@@ -169,6 +171,13 @@
     gap: 8px;
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  .pill-group.locations-group {
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+    justify-content: center;
+    gap: 8px;
   }
 
   .pill-label {
@@ -327,11 +336,11 @@
 
   .park-name {
     font-family: var(--font-display);
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    font-size: 2.1rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
     text-transform: uppercase;
-    color: var(--navy-muted);
+    color: var(--navy);
     padding-bottom: 14px;
     margin-bottom: 4px;
     border-bottom: 1.5px solid var(--navy-faint);
@@ -559,7 +568,7 @@
 
     <div class="filter-group">
       <span class="filter-label" id="locationsLabel">Locations</span>
-      <div class="pill-group" role="group" aria-labelledby="locationsLabel">
+      <div class="pill-group locations-group" role="group" aria-labelledby="locationsLabel">
         <label class="pill-label"><input type="checkbox" class="loc" value="banfield_park" checked><span class="pill">Banfield</span></label>
         <label class="pill-label"><input type="checkbox" class="loc" value="barnard_park" checked><span class="pill">Barnard</span></label>
         <label class="pill-label"><input type="checkbox" class="loc" value="beacon_hill_park" checked><span class="pill">Beacon Hill</span></label>
