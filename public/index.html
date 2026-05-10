@@ -558,7 +558,8 @@
 const WIDGET_ID = '2d849259-dcf3-41d0-a5d4-fea2489cc704';
 
 const today = new Date();
-document.getElementById('dateInput').value = today.toISOString().split('T')[0];
+const localDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+document.getElementById('dateInput').value = localDate;
 
 function syncToURL() {
   const date = document.getElementById('dateInput').value;
