@@ -463,6 +463,19 @@
     font-style: italic;
   }
 
+  .disclaimer {
+    margin-top: 32px;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    color: var(--navy-muted);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .disclaimer a {
+    color: var(--navy-muted);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -711,6 +724,7 @@ function render(courts, targetDate) {
 
   if (!anyData) html += '<p class="empty">No availability data for this date.</p>';
 
+  html += '<p class="disclaimer">Availability reflects city data and may not include very recent bookings. Always confirm on the <a href="https://cityofvictoria.perfectmind.com" target="_blank" rel="noopener noreferrer">city\'s booking site</a> before finalizing.</p>';
   html += '</div>';
   document.getElementById('results').innerHTML = html;
 }
